@@ -1,6 +1,6 @@
 # Leaky Vessel / Touchpoints
 
-**Platform edition** of *Leaky Vessel*: a self-contained p5.js work for EditART and other online generative-art platforms and gallery screens. No server, camera, network or external font is used. The installation version, which watches a real room and runs for one year, is in [`leaky-vessel/`](leaky-vessel/README.md). The next work in the series, in fluorescent thread, is [`loose-thread/`](loose-thread/README.md).
+**Platform edition** of *Leaky Vessel*: a self-contained p5.js work for EditART and other online generative-art platforms and gallery screens. No server, camera, network or external font is used. The installation version, which watches a real room and runs for one year, is in [`leaky-vessel/`](leaky-vessel/README.md). The next work in the series, in fluorescent thread, is [`loose-thread/`](loose-thread/README.md). The third, ten editions at 1920 × 1080 for screen and giclée print, is [`afterimage/`](afterimage/README.md).
 
 A day of consumer communication reaches a room: push notifications, feeds, receipts, packaging, radio, posters, billboards and shop signs. None of it is shown as written. Each message arrives already transmuted into an abstraction made from its own letterforms. At 23:00 the system writes one log about what it measured. At midnight the day's marks are purged, half of the accumulated residue leaks away, and only a faint trace survives, plus the one mark the viewer chose to hold. Older logs lose letters each day and are gone after sixteen days.
 
