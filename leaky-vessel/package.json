@@ -1,0 +1,19 @@
+{
+  "name": "leaky-vessel",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A durational system designed to fail at perfect preservation.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "demo": "SPEED=8640 POET=local node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "optionalDependencies": {
+    "@anthropic-ai/sdk": "^0.133.0"
+  },
+  "license": "MIT"
+}

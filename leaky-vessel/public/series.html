@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Leaky Vessel — Series</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { display: block; }
+    .series-head { padding: 24px 24px 0; }
+    #holder { padding: 16px 24px 24px; display: block; }
+    @media (max-width: 860px) { .series-head { padding: 16px 16px 0; } #holder { padding: 12px 16px; height: auto; } }
+  </style>
+  <script src="/p5.min.js"></script>
+</head>
+<body>
+  <header class="series-head">
+    <h1>Leaky Vessel — the twelve elements</h1>
+    <p class="sys" id="source">Waiting for the lens…</p>
+  </header>
+  <div id="holder"></div>
+  <script src="pipelines.js"></script>
+  <script>
+    // One source, twelve readings of it, side by side.
+    let feed;
+    let lastLive = 0;
+    let lastStudy = 0;
+    let MONO = "monospace";
+    const STUDY_TEXT = "The brightest hour was 14:00. Most of it came from the upper left. Something moved through the middle of the frame around 18:00. It did not happen again.";
+
+    function setup() {
+      const c = createCanvas(10, 10);
+      c.parent("holder");
+      MONO = getComputedStyle(document.documentElement).getPropertyValue("--mono").trim() || MONO;
+      feed = new Feed();
+      fit();
+      const es = new EventSource("/api/stream");
+      es.addEventListener("field", (e) => {
+        feed.push(decodeField(JSON.parse(e.data).rgb));
+        lastLive = Date.now();
+      });
+    }
+
+    function cols() {
+      return windowWidth < 860 ? 2 : 4;
+    }
+
+    function fit() {
+      const w = document.getElementById("holder").clientWidth - (windowWidth < 860 ? 32 : 48);
+      const c = cols();
+      const cellW = (w - (c - 1) * 16) / c;
+      const cellH = cellW * 0.75 + 42;
+      resizeCanvas(Math.floor(w), Math.ceil(cellH * Math.ceil(12 / c)));
+    }
+
+    function windowResized() {
+      fit();
+    }
+
+    // A synthetic room for when no lens is connected: a window whose light
+    // moves through the day, a lamp, and a figure that crosses now and then.
+    function studyField(t) {
+      const out = new Uint8Array(FN * 3);
+      const day = 0.5 + 0.5 * Math.sin(t * 0.05);
+      const walker = ((t * 0.9) % 70) - 11;
+      for (let y = 0; y < FH; y++) {
+        for (let x = 0; x < FW; x++) {
+          const i = (y * FW + x) * 3;
+          let r = 0.16, g = 0.14, b = 0.12;
+          const win = x > 4 && x < 17 && y > 4 && y < 22;
+          if (win) { r = 0.55 + 0.4 * day; g = 0.5 + 0.38 * day; b = 0.42 + 0.3 * day; }
+          // light falling from the window onto the floor
+          const fall = Math.max(0, 1 - Math.hypot(x - 14 - y * 0.3, y - 30) / 12) * day;
+          r += fall * 0.45; g += fall * 0.38; b += fall * 0.25;
+          // a lamp on the right
+          const lamp = Math.max(0, 1 - Math.hypot(x - 39, y - 14) / 7) * (1 - day);
+          r += lamp * 0.7; g += lamp * 0.5; b += lamp * 0.2;
+          // a table
+          if (y > 24 && y < 27 && x > 22 && x < 40) { r = 0.3; g = 0.22; b = 0.15; }
+          // the figure
+          if (Math.abs(x - walker) < 2.5 && y > 9 && y < 33) { r *= 0.25; g *= 0.25; b *= 0.3; }
+          out[i] = Math.min(255, r * 255);
+          out[i + 1] = Math.min(255, g * 255);
+          out[i + 2] = Math.min(255, b * 255);
+        }
+      }
+      return out;
+    }
+
+    function draw() {
+      background(GROUND);
+      const t = millis() / 1000;
+      const live = Date.now() - lastLive < 4000;
+      if (!live && millis() - lastStudy > 500) {
+        lastStudy = millis();
+        feed.push(studyField(t));
+      }
+      document.getElementById("source").textContent = live
+        ? "Source: the live lens, abstracted. Raw footage is never shown."
+        : "Source: a synthetic study room (no lens is sending).";
+      feed.step();
+      if (!feed.has) return;
+      const c = cols();
+      const gap = 16;
+      const cellW = (width - (c - 1) * gap) / c;
+      const cellH = cellW * 0.75;
+      ELEMENTS.forEach((E, k) => {
+        const x = (k % c) * (cellW + gap);
+        const y = Math.floor(k / c) * (cellH + 42);
+        drawingContext.save();
+        drawingContext.beginPath();
+        drawingContext.rect(x, y, cellW, cellH);
+        drawingContext.clip();
+        E.draw(feed, x, y, cellW, cellH, { t, text: STUDY_TEXT, progress: (t * 0.02) % 1, seed: k * 977, mono: MONO });
+        drawingContext.restore();
+        rawDone();
+        drawingContext.fillStyle = "#8d8a82";
+        drawingContext.font = `11px ${MONO}`;
+        drawingContext.textAlign = "left";
+        drawingContext.textBaseline = "top";
+        drawingContext.fillText(`${String(k + 1).padStart(2, "0")} ${E.name}`, x, y + cellH + 8);
+        rawDone();
+      });
+    }
+  </script>
+</body>
+</html>

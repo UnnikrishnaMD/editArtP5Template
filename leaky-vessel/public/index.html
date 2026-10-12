@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Leaky Vessel</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="/p5.min.js"></script>
+</head>
+<body>
+  <main class="stage">
+    <div id="holder"></div>
+    <div class="caption">
+      <p class="sys" id="element-label"></p>
+      <p class="note" id="element-note"></p>
+      <button class="link" id="back-live" hidden>Return to the live feed</button>
+    </div>
+    <p class="final-text" id="final-text" hidden></p>
+  </main>
+
+  <aside class="ledger">
+    <header>
+      <h1>Leaky Vessel</h1>
+      <p class="sys" id="clock"></p>
+      <p class="sys" id="status"></p>
+    </header>
+
+    <section id="banner" class="banner" hidden></section>
+
+    <section id="acquire" hidden>
+      <p class="note">This system has been running since before you arrived. What it saw before now is already gone.</p>
+      <p class="note">Acquiring it starts a single year that cannot be paused, extended or restarted. At the end of each month you must keep one day and let the rest dissolve. You will choose from the machine's logs alone.</p>
+      <button class="act" id="acquire-btn">Acquire</button>
+    </section>
+
+    <section>
+      <h2 class="sys">The year</h2>
+      <div id="year"></div>
+      <p class="legend sys">
+        <span class="cell running"></span>now
+        <span class="cell limbo"></span>held
+        <span class="cell saved"></span>kept
+        <span class="cell dissolved"></span>dissolved
+        <span class="cell collapsed"></span>collapsed
+      </p>
+    </section>
+
+    <section id="reflect" hidden>
+      <h2 class="sys">Write into the absence</h2>
+      <textarea id="reflect-text" rows="3" maxlength="1000" placeholder="What are you missing?"></textarea>
+      <button class="act" id="reflect-btn">Leave this here</button>
+      <p class="note small">Reflections are kept until the end of the year, then absorbed into the final afterimage, which anyone can see.</p>
+    </section>
+
+    <section>
+      <h2 class="sys" id="logs-title">Logs</h2>
+      <ol id="logs"></ol>
+    </section>
+  </aside>
+
+  <div id="ultimatum" class="overlay" hidden>
+    <div class="sheet">
+      <p class="sys" id="ult-head"></p>
+      <h2 id="ult-title"></h2>
+      <p class="note" id="ult-sub"></p>
+      <ol id="ult-days"></ol>
+      <label class="sys" for="ult-reflect">What are you letting go of? (optional)</label>
+      <textarea id="ult-reflect" rows="3" maxlength="1000"></textarea>
+      <div class="row">
+        <button class="act" id="ult-keep" disabled>Choose a day</button>
+        <button class="link" id="ult-close">Not yet</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="pipelines.js"></script>
+  <script src="vessel.js"></script>
+</body>
+</html>

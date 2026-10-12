@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Leaky Vessel — Lens</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="/p5.min.js"></script>
+</head>
+<body class="lens">
+  <main class="stage"><div id="holder"></div></main>
+  <aside class="ledger">
+    <header>
+      <h1>Leaky Vessel</h1>
+      <p class="sys">Lens — artist's machine</p>
+    </header>
+    <p class="sys" id="lens-status">Waiting for the camera…</p>
+    <p class="note">This page never shows or sends the camera image. It sends a 48×36 grid of colour twice a second. If the server's voice is set to <em>vision</em>, it also sends one small JPEG per hour so the model can write the day's log. The server deletes those JPEGs at the end of each day.</p>
+  </aside>
+  <script src="lens.js"></script>
+</body>
+</html>
